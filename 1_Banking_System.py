@@ -16,14 +16,21 @@ operation = 0
 balance = 2000
 in_transit = 0
 
+status = 'none'
+
 def error(max_tries, tries):
+    global status
+
     if tries != max_tries: 
         print('Invalid username or password. Please try again.')
         print('tries left: ' + str(max_tries - tries))
     else:
         print('Too many login attempts. Please try again later.\n')
+        status = 'WRONG'
+        
 
 def credentials(user_db, password_db, max_tries):
+    global status
     tries = 0
 
     while tries < max_tries:
@@ -37,6 +44,8 @@ def credentials(user_db, password_db, max_tries):
             error(max_tries, tries)
         else:
             print('Welcome Back\n')
+            status = 'OK'
+            break
 
 def menu():
     print("╔════════════════════════╗")
@@ -120,11 +129,11 @@ def menu_logic(operation):
     else:
         print('\nError: Invalid operation number. Try again.\n')   
 
-#credentials(user_db, password_db, max_tries)
-menu()
-while operation != 5:
-    operation = int(input('Type the operation number you wish to perform: '))
-    menu_logic(operation)
-
-
-
+credentials(user_db, password_db, max_tries)
+if status == 'OK':
+    menu()
+    while operation != 5:
+        operation = int(input('Type the operation number you wish to perform: '))
+        menu_logic(operation)
+else:
+    print('')
